@@ -23,6 +23,30 @@ blockquote, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, li, ol, p, pre, td, t
   padding: 0;
 }
 
+#audio-control{
+  font-size: 24px;
+  color: #5f9042;
+  position: absolute;
+  left: 50%;
+  top: 124px;
+  transform: translate(-50%, 0%);
+  user-select: none;
+  cursor: pointer;
+}
+.audio-mute{
+  display: none;
+}
+.audio-off{
+  display: block;
+}
+#audio-control.on .audio-mute{
+  display: block;
+}
+#audio-control.on .audio-off{
+  display: none;
+}
+
+
 #world{
   position: absolute;
   width:100%;
@@ -148,6 +172,10 @@ blockquote, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, li, ol, p, pre, td, t
   </div>
 <div id="gameoverInstructions" class="">
   Game Over
+</div>
+<div id="audio-control">
+  <span class="audio-mute"><i class="fas fa-volume-mute"></i></span>
+  <span class="audio-off"><i class="fas fa-volume-off"></i></span>
 </div>
 <div id="dist">
     <div class="label">distance</div>
@@ -1422,11 +1450,22 @@ function render() {
 
 const
   introStartWrp = document.querySelector("#intro_start_wrapper"),
-  content_intro = document.querySelector("#root");
+  content_intro = document.querySelector("#root"),
+  audioControl = document.querySelector("#audio-control");
 
   introStartWrp.addEventListener("click", () => {
     init();
     content_intro.classList.add("hidden")
+  });
+
+  audioControl.addEventListener("click", () => {
+    if (audioControl.classList.contains('on')) {
+      audioControl.classList.remove('on')
+      audio.pause();
+    } else {
+      audioControl.classList.add('on')
+      audio.play();
+    }
   });
 
 //window.addEventListener('load', init, false);
@@ -1465,7 +1504,6 @@ function resetGame() {
   gameStatus = "play";
   hero.status = "running";
   hero.nod();
-  audio.play();
   updateLevel();
   levelInterval = setInterval(updateLevel, levelUpdateFreq);
 }
